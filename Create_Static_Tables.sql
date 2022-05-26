@@ -1,5 +1,6 @@
 DROP TABLE accounts;
 CREATE TABLE accounts(
+id_user NUMBER(38) NOT NULL,
 email Varchar2(50) NOT NULL, 
 username Varchar2(50) NOT NULL,
 pass Varchar2(50) NOT NULL
@@ -36,9 +37,9 @@ CREATE TABLE exchange_autographs(
 
 ----------------------------------------------------------------------------------------------------
 BEGIN
-   INSERT INTO accounts VALUES ('oloeriud@yahoo.com', 'Delia', 'pass');
-   INSERT INTO accounts VALUES ('ilinca.dumitrascu@gmail.com', 'Ilinca', 'pass');
-   INSERT INTO accounts VALUES ('luigi@gmail.com', 'Luigi', 'pass');
+   INSERT INTO accounts VALUES (1, 'oloeriud@yahoo.com', 'Delia', 'pass');
+   INSERT INTO accounts VALUES (2, 'ilinca.dumitrascu@gmail.com', 'Ilinca', 'pass');
+   INSERT INTO accounts VALUES (3, 'luigi@gmail.com', 'Luigi', 'pass');
    
    INSERT INTO autograph_authors VALUES (1, 'Lady Gaga', 'music', 10);
    INSERT INTO autograph_authors VALUES (2, 'Mihai Eminescu', 'literature', 2);

@@ -11,13 +11,19 @@ CREATE OR REPLACE PACKAGE BODY user_package AS
 
     FUNCTION register_user(p_email_user IN VARCHAR2, p_username IN VARCHAR2, 
     p_password IN VARCHAR2) RETURN VARCHAR2 AS
+    
     counter INTEGER;
+    counter2 INTEGER;
+    v_user_counter INTEGER;
+        
     BEGIN
-
+        select count(*) into counter2 from accounts;
+        v_user_counter := counter2+1;
+        
         IF (NOT p_email_user IS NULL AND NOT p_username IS NULL AND NOT p_password IS NULL) THEN
             SELECT COUNT(*) INTO counter FROM accounts WHERE email = p_email_user;
             IF (counter = 0) THEN
-                INSERT INTO accounts VALUES (p_email_user, p_username, p_password);
+                INSERT INTO accounts VALUES (v_user_counter, p_email_user, p_username, p_password);
                 RETURN 0; -- successfully registered 
             END IF;
             RETURN 1; -- already registered
