@@ -2,8 +2,6 @@ CREATE OR REPLACE PACKAGE autograph_methods AS
     function compute_points(p_id_author in number, p_id_item in number, p_mentions in varchar2) return integer;
 
     procedure exchange_auto(p_id_user in number, p_id_auto in number, p_id_ex_auto in number);
-        p_id_user in number, p_author in number, p_item in varchar2,
-        p_moment in varchar2, p_mentions in varchar2) return varchar2;
     procedure new_tag (p_id_auto in number, p_id_tag in number);
     procedure new_autograph_dynamic(
         p_id_user in number, p_id_auto in NUMBER, p_id_author NUMBER,
@@ -45,12 +43,11 @@ CREATE OR REPLACE PACKAGE BODY autograph_methods AS
         end if;
             
         v_points := 70/100*v_author_importance + 30/100*v_item_importance;
-        dbms_output.put_line(v_points);
+
         if (v_has_mentions = true) then
             v_points := v_points + 5/100*v_points;
         end if;
         
-        dbms_output.put_line(v_points);
         return v_points;
             
     end compute_points;
