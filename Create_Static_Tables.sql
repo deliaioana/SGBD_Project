@@ -1,5 +1,6 @@
 DROP TABLE accounts;
 CREATE TABLE accounts(
+id_user NUMBER(38) NOT NULL,
 email Varchar2(50) NOT NULL, 
 username Varchar2(50) NOT NULL,
 pass Varchar2(50) NOT NULL
@@ -25,7 +26,7 @@ importance integer not null
 DROP TABLE autographs;
 CREATE TABLE autographs(
     id_autograph NUMBER(38) NOT NULL,
-    id_user VARCHAR2(50) NOT NULL,
+    id_user NUMBER(38) NOT NULL,
     id_author NUMBER(38) NOT NULL,
     id_item NUMBER(38) NOT NULL,
     moment VARCHAR2(50),
@@ -42,13 +43,13 @@ create table items(
 
 --
 BEGIN
-   INSERT INTO accounts VALUES ('oloeriud@yahoo.com', 'Delia', 'pass');
-   INSERT INTO accounts VALUES ('ilinca.dumitrascu@gmail.com', 'Ilinca', 'pass');
-   INSERT INTO accounts VALUES ('luigi@gmail.com', 'Luigi', 'pass');
+   INSERT INTO accounts VALUES (1, 'oloeriud@yahoo.com', 'Delia', 'pass');
+   INSERT INTO accounts VALUES (2, 'ilinca.dumitrascu@gmail.com', 'Ilinca', 'pass');
+   INSERT INTO accounts VALUES (3, 'luigi@gmail.com', 'Luigi', 'pass');
    
-   INSERT INTO autographs VALUES (1, 'oloeriud@yahoo.com', 2, 3, 'concert', null, 10);
-   INSERT INTO autographs VALUES (2, 'oloeriud@yahoo.com', 1, 1, 'theatre', 'fragile', 40);
-   INSERT INTO autographs VALUES (3, 'ilinca.dumitrascu@gmail.com', 3, 4, 'meeting', null, 20);
+   INSERT INTO autographs VALUES (1, 1, 2, 3, 'concert', null, 10);
+   INSERT INTO autographs VALUES (2, 1, 1, 1, 'theatre', 'fragile', 40);
+   INSERT INTO autographs VALUES (3, 2, 3, 4, 'meeting', null, 20);
    
    INSERT INTO autograph_authors VALUES (1, 'Lady Gaga', 'music', 10);
    INSERT INTO autograph_authors VALUES (2, 'Mihai Eminescu', 'literature', 2);
