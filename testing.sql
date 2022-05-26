@@ -18,12 +18,12 @@ describe user_2_autographs;
 select * from autograph_3_tags;
 
 SELECT * FROM accounts;
-SELECT * FROM autographs;
 SELECT * FROM autograph_authors;
 SELECT * FROM tags;
-SELECT * FROM used_tags;
 SELECT TABLE_NAME FROM USER_TABLES;
-
+SELECT * FROM exchange_autographs;
+select * from user_test_email_autographs;
+drop table used_tags;
 
 --------------------------------------------------
 set serveroutput on;
@@ -31,5 +31,10 @@ declare
 
 begin
     DBMS_OUTPUT.put_line(user_package.register_user('email@email', 'Email', 'email'));
+
 end;
 --------------------------------------------------
+
+
+
+

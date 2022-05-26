@@ -1,6 +1,7 @@
 CREATE OR REPLACE PACKAGE autograph_methods AS
     function compute_points(p_id_author in number, p_id_item in number, p_mentions in varchar2) return integer;
-    function new_autograph ( 
+
+    procedure exchange_auto(p_id_user in number, p_id_auto in number, p_id_ex_auto in number);
         p_id_user in number, p_author in number, p_item in varchar2,
         p_moment in varchar2, p_mentions in varchar2) return varchar2;
     procedure new_tag (p_id_auto in number, p_id_tag in number);
@@ -44,36 +45,48 @@ CREATE OR REPLACE PACKAGE BODY autograph_methods AS
         end if;
             
         v_points := 70/100*v_author_importance + 30/100*v_item_importance;
+        dbms_output.put_line(v_points);
         if (v_has_mentions = true) then
             v_points := v_points + 5/100*v_points;
         end if;
         
+        dbms_output.put_line(v_points);
         return v_points;
             
     end compute_points;
     
-----------------------------------------------------------------------------------------------------
-    function new_autograph ( 
-    p_id_user in number, p_author in number, p_item in varchar2,
-    p_moment in varchar2, p_mentions in varchar2) return varchar2 as
-
-    counter integer;
-    v_id_autograph integer;
-    v_points integer := 0;
-    begin
     
-        select count(*) into counter from autographs;
-        v_id_autograph := counter+1;
+----------------------------------------------------------------------------------------------------
+    procedure exchange_auto(p_id_user in number, p_id_auto in number, p_id_ex_auto in number) as
+    v_auto_points integer;
+    v_ex_auto_points integer;
+    plsql_stmt varchar2(100);
+    this_users_autographs varchar2(50);
+    this_autographs_tags varchar2(50);
+    copys integer;
+    begin
+        this_users_autographs := 'user_' || p_id_user || '_autographs';
+        this_autographs_tags := 'autograph_' || p_id_auto || '_tags';
         
-        v_points := compute_points(p_author, p_item, p_mentions);
+        plsql_stmt := 'select points into v_auto_points from ' || this_users_autographs || ' where id_autograph=p_id_auto';
+        execute immediate plsql_stmt;
         
-        if (p_id_user is not null and p_author is not null) then
-            insert into autographs values (v_id_autograph, p_id_user, p_author, p_item, 
-                p_moment, p_mentions, v_points);
-            return '0'; -- successfully inserted
+        select points into v_ex_auto_points from exchange_autographs where id_autograph=p_id_ex_auto;
+        
+        DBMS_OUTPUT.put_line(v_auto_points);
+        DBMS_OUTPUT.put_line(v_ex_auto_points);
+        if(v_auto_points > v_ex_auto_points) then
+            copys := v_auto_points / v_ex_auto_points;
+            DBMS_OUTPUT.put_line(copys);
+        --else
+            --throw exception -> cannot exchange for something more valuable.
         end if;
-        return '1'; -- incorrect entry
-    end new_autograph;
+
+        
+        --delete autograph p_id_auto from this_users_autographs
+        --insert x=copys autographs p_id_ex_auto into this_users_autographs
+        
+    end;
     
 ----------------------------------------------------------------------------------------------------
     procedure new_tag (p_id_auto in number, p_id_tag in number) as
@@ -126,8 +139,6 @@ END;
 
 
    
-
-
 
 
 
