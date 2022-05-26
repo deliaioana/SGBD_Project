@@ -1,16 +1,16 @@
 CREATE OR REPLACE PACKAGE user_package AS
-    FUNCTION register_user(p_email_user IN VARCHAR2, p_username IN VARCHAR2, 
-        p_password IN VARCHAR2) RETURN VARCHAR2;
+    procedure register_user(p_email_user IN VARCHAR2, p_username IN VARCHAR2, 
+        p_password IN VARCHAR2, return_code out number);
         
-    FUNCTION login(p_email IN VARCHAR2, p_password IN VARCHAR2) RETURN VARCHAR2;
+    procedure login(p_email IN VARCHAR2, p_password IN VARCHAR2, return_code out number);
     
 END;
 
 
 CREATE OR REPLACE PACKAGE BODY user_package AS
 
-    FUNCTION register_user(p_email_user IN VARCHAR2, p_username IN VARCHAR2, 
-    p_password IN VARCHAR2) RETURN VARCHAR2 AS
+    procedure register_user(p_email_user IN VARCHAR2, p_username IN VARCHAR2, 
+    p_password IN VARCHAR2, return_code out number) AS
     
     counter INTEGER;
     counter2 INTEGER;
@@ -24,23 +24,26 @@ CREATE OR REPLACE PACKAGE BODY user_package AS
             SELECT COUNT(*) INTO counter FROM accounts WHERE email = p_email_user;
             IF (counter = 0) THEN
                 INSERT INTO accounts VALUES (v_user_counter, p_email_user, p_username, p_password);
-                RETURN 0; -- successfully registered 
+                return_code := 0; -- successfully registered 
+            else
+            return_code := 1; -- already registered
             END IF;
-            RETURN 1; -- already registered
+        else
+            return_code := 2; -- invalid entry
         END IF;    
-        RETURN 2; -- invalid entry
-    END register_user;
+        
+    END;
 
 ----------------------------------------------------------------------------------------------------
 
-    FUNCTION login(p_email in varchar2, p_password in varchar2) return varchar2 as
+    procedure login(p_email in varchar2, p_password in varchar2, return_code out number) as
     counter integer;
     begin
         select count(*) into counter from accounts where email=p_email and pass=p_password;
         if counter=1 then
-            return '0'; -- successfully logged in 
+            return_code := 0; -- successfully logged in 
         end if;
-        return '1'; -- not registered
+        return_code := 1; -- not registered
     end login;
 END;
 
