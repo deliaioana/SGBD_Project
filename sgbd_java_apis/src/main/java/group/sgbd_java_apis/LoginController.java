@@ -21,15 +21,26 @@ public class LoginController {
             System.out.println("email: " + email + ", password: " + password);
 
             int return_code = -1;
-            CallableStatement stmt = connection.prepareCall("{call user_package.login(?,?,?)}");
+            CallableStatement stmt = connection.prepareCall("{call user_package.login(?,?,?,?)}");
             stmt.setString(1, email);
             stmt.setString(2, password);
             stmt.registerOutParameter(3, Types.INTEGER);
+            stmt.registerOutParameter(4, Types.INTEGER);
 
             stmt.execute();
 
             return_code = stmt.getInt(3);
-            System.out.println("return code: " + return_code);
+            Integer user_id = stmt.getInt(4);
+
+            String message = "";
+
+            if(return_code == 0) {
+                message = "Logged in with success! Your id is: " + user_id;
+            }
+            else {
+                message = "There was a problem logging in!";
+            }
+            System.out.println(message);
 
             connection.commit();
             stmt.close();
@@ -37,7 +48,7 @@ public class LoginController {
         }
         catch (SQLException e) {
             e.printStackTrace();
-            return "failed2";
+            return "failed";
         }
         return "success";
     }
