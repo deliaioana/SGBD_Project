@@ -4,8 +4,8 @@ begin
 end;
 set serveroutput on;
 begin
-    create_tables.create_autographs_table(2);
-    autograph_methods.new_autograph_dynamic(2, 3, 2, 1, 'now', 'no_ty');
+    --create_tables.create_autographs_table(2);
+    autograph_methods.new_autograph_dynamic(2, 6, 2, 1, 'last summer', 'cute');
 end;
 
 begin
@@ -27,9 +27,9 @@ drop table user_test_email_autographs;
 --------------------------------------------------
 set serveroutput on;
 declare
-
+output varchar2(500);
 begin
-    DBMS_OUTPUT.put_line(user_package.register_user('email@email', 'Email', 'email'));
+    autograph_methods.get_user_autographs(2, output);
 end;
 --------------------------------------------------
 

@@ -31,7 +31,19 @@ public class RegisterController {
             stmt.execute();
 
             return_code = stmt.getInt(4);
-            System.out.println("return code: " + return_code);
+
+            String message = "";
+
+            if(return_code == 0) {
+                message = "Registered with success!";
+            }
+            else if(return_code == 1){
+                message = "Already registered!";
+            }
+            else {
+                message = "Unexpected problem during register process!";
+            }
+            System.out.println(message);
 
             connection.commit();
             stmt.close();
