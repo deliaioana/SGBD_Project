@@ -48,7 +48,7 @@ BEGIN
    INSERT INTO autograph_authors VALUES (5, 'Marie Curie', 'science', 2);
    INSERT INTO autograph_authors VALUES (6, 'Isaac Newton', 'science', 3);
    
-   INSERT INTO exchange_autographs VALUES (1, 4, 1, 1);
+   INSERT INTO exchange_autographs VALUES (1, 4, 1, 1); --id/autor/item/pct
    INSERT INTO exchange_autographs VALUES (2, 5, 2, 2);
    INSERT INTO exchange_autographs VALUES (3, 6, 3, 3);
    

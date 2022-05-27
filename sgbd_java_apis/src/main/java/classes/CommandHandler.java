@@ -41,9 +41,24 @@ public class CommandHandler {
                         command.split(" ")[3], command.split(" ")[4],
                         command.split(" ")[5], command.split(" ")[6]);
                 break;
+            case "help":
+                executeHelp();
+                break;
             default:
                 break;
         }
+    }
+
+    private void executeHelp() {
+        System.out.println("---------------------------------------------------\nhelp" +
+                "Try the following commands:\n" +
+                "- register email username password\n" +
+                "- login email password\n" +
+                "- get your_id (see your autograph collection)\n" +
+                "- new your_id autograph_id author_id item_id moment mention " +
+                "\n             (add a new autograph into your collection)\n" +
+                "- help \n" +
+                "- stop \n\n---------------------------------------------------");
     }
 
     private void executeNewAutograph(String s, String s1, String s2, String s3, String s4, String s5) {
@@ -113,6 +128,7 @@ public class CommandHandler {
     public void run (){
         while(!stop) {
             getInput();
+            System.exit(0);
         }
     }
 }
