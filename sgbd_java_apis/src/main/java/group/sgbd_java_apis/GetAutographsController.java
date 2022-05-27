@@ -13,7 +13,7 @@ import java.sql.Types;
 public class GetAutographsController {
 
     @PostMapping("/autographs/{id_user}")
-    public String login(@PathVariable Integer id_user){
+    public String getAutographs(@PathVariable Integer id_user){
 
         try{
             Connection connection = Database.getConnection();

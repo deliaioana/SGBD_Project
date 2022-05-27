@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class CommandHandler {
     private String registerPostUrl = "http://localhost:8081/api/register";
     private String loginPostUrl = "http://localhost:8081/api/login";
+    private String autographNewUrl = "http://localhost:8081/api/new";
     private boolean stop = false;
     private String autographGetUrl = "http://localhost:8081/api/autographs";
 
@@ -35,8 +36,29 @@ public class CommandHandler {
             case "get":
                 executeGetAutographs(command.split(" ")[1]);
                 break;
+            case "new":
+                executeNewAutograph(command.split(" ")[1], command.split(" ")[2],
+                        command.split(" ")[3], command.split(" ")[4],
+                        command.split(" ")[5], command.split(" ")[6]);
+                break;
             default:
                 break;
+        }
+    }
+
+    private void executeNewAutograph(String s, String s1, String s2, String s3, String s4, String s5) {
+        String url = autographNewUrl + '/' + s + '/' + s1 + '/' + s2 + '/' + s3 + '/' + s4 + '/' + s5;
+        HttpPost httppost = new HttpPost(url);
+
+        System.out.println(url);
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(httppost)) {
+
+            System.out.println(EntityUtils.toString(response.getEntity()));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

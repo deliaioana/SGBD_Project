@@ -18,7 +18,7 @@ CREATE OR REPLACE PACKAGE BODY user_package AS
     v_count INTEGER;
     counter2 INTEGER;
     v_user_counter INTEGER;
-        
+    v_id_user integer;
     BEGIN
         select count(*) into counter2 from accounts;
         v_user_counter := counter2+1;
@@ -26,7 +26,9 @@ CREATE OR REPLACE PACKAGE BODY user_package AS
         v_count := count_registered_users(p_email_user);
             exception
                 when exceptions_package.already_registered then
-                    return_code := 8;--create_tables.create_autographs_table(p_id_user); ---------de decomentat
+                    return_code := 8;
+                    select id_user into v_id_user from accounts where email = p_email_user;
+                    create_tables.create_autographs_table(v_id_user);
                     
         IF (NOT p_email_user IS NULL AND NOT p_username IS NULL AND NOT p_password IS NULL) THEN
             IF (v_count = 0) THEN

@@ -37,7 +37,7 @@ public class RegisterController {
             if(return_code == 0) {
                 message = "Registered with success!";
             }
-            else if(return_code == 1){
+            else if(return_code == 8){
                 message = "Already registered!";
             }
             else {
