@@ -7,6 +7,7 @@ CREATE OR REPLACE PACKAGE autograph_methods AS
         p_id_user in number, p_id_auto in NUMBER, p_id_author NUMBER,
         p_id_item NUMBER, p_moment VARCHAR2, p_mentions VARCHAR2);
     procedure delete_autograph(p_id_user in number, p_id_auto in number);
+    procedure get_user_autographs(p_id_user in number, output out varchar2);
 END;
 
 
@@ -132,6 +133,71 @@ CREATE OR REPLACE PACKAGE BODY autograph_methods AS
         sql_stmt := 'DELETE FROM ' || table_name || ' WHERE id_autograph = ' || p_id_auto;
         execute IMMEDIATE sql_stmt;
     end delete_autograph;
+    
+----------------------------------------------------------------------------------------------------
+
+    procedure get_user_autographs(p_id_user in number, output out varchar2) as 
+    
+    out_string varchar2(500);
+    auto_string varchar2(500);
+    table_name varchar2(50);
+    
+    v_cursor_id INTEGER;
+    v_ok INTEGER;
+   
+    v_id_autograph integer;
+    v_id_author integer;
+    v_id_item integer;
+    v_moment varchar2(50);
+    v_mentions varchar2(50);
+    v_points integer;
+    v_new_line varchar(50) := CHR(13) || CHR(10);
+
+    begin
+    
+        out_string := '{';
+        table_name := 'user_' || p_id_user || '_autographs';
+        
+        v_cursor_id := DBMS_SQL.OPEN_CURSOR;
+        DBMS_SQL.PARSE(v_cursor_id, 'SELECT id_autograph, id_author, id_item, moment, mentions, points FROM ' 
+            || table_name || ' ', DBMS_SQL.NATIVE);
+            
+        DBMS_SQL.DEFINE_COLUMN(v_cursor_id, 1, v_id_autograph); 
+        DBMS_SQL.DEFINE_COLUMN(v_cursor_id, 2, v_id_author); 
+        DBMS_SQL.DEFINE_COLUMN(v_cursor_id, 3, v_id_item); 
+        DBMS_SQL.DEFINE_COLUMN(v_cursor_id, 4, v_moment, 50);
+        DBMS_SQL.DEFINE_COLUMN(v_cursor_id, 5, v_mentions, 50);
+        DBMS_SQL.DEFINE_COLUMN(v_cursor_id, 6, v_points);
+        
+        v_ok := DBMS_SQL.EXECUTE(v_cursor_id);
+        
+        LOOP 
+            IF DBMS_SQL.FETCH_ROWS(v_cursor_id)>0 THEN 
+                DBMS_SQL.COLUMN_VALUE(v_cursor_id, 1, v_id_autograph); 
+                DBMS_SQL.COLUMN_VALUE(v_cursor_id, 2, v_id_author); 
+                DBMS_SQL.COLUMN_VALUE(v_cursor_id, 3, v_id_item); 
+                DBMS_SQL.COLUMN_VALUE(v_cursor_id, 4, v_moment);
+                DBMS_SQL.COLUMN_VALUE(v_cursor_id, 5, v_mentions);
+                DBMS_SQL.COLUMN_VALUE(v_cursor_id, 6, v_points);
+            
+                auto_string := '{ autograph id: ' || v_id_autograph 
+                    || ', author id: ' || v_id_author
+                    || ', item id: ' || v_id_item
+                    || ', moment: ' || v_moment
+                    || ', mentions: ' || v_mentions
+                    || ', points: ' || v_points || ' }';
+                    
+                out_string := out_string || v_new_line || auto_string;
+            ELSE 
+                EXIT; 
+            END IF; 
+            
+        END LOOP;   
+        DBMS_SQL.CLOSE_CURSOR(v_cursor_id);
+    out_string := out_string || v_new_line || '}';
+    output := out_string;
+    DBMS_OUTPUT.PUT_LINE(output);
+    end;
 END;
 
 

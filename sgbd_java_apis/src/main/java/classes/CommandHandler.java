@@ -13,6 +13,7 @@ public class CommandHandler {
     private String registerPostUrl = "http://localhost:8081/api/register";
     private String loginPostUrl = "http://localhost:8081/api/login";
     private boolean stop = false;
+    private String autographGetUrl = "http://localhost:8081/api/autographs";
 
     public void getInput() {
         Scanner scanner = new Scanner(System.in);
@@ -31,8 +32,27 @@ public class CommandHandler {
             case "stop":
                 stop = true;
                 break;
+            case "get":
+                executeGetAutographs(command.split(" ")[1]);
+                break;
             default:
                 break;
+        }
+    }
+
+    private void executeGetAutographs(String id_user) {
+        String url = autographGetUrl + '/' + id_user;
+        HttpPost httppost = new HttpPost(url);
+
+        System.out.println(url);
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(httppost)) {
+
+            System.out.println(EntityUtils.toString(response.getEntity()));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
