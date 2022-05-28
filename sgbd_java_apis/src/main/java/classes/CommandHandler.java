@@ -128,7 +128,8 @@ public class CommandHandler {
     public void run (){
         while(!stop) {
             getInput();
-            System.exit(0);
+
         }
+        System.exit(0);
     }
 }
